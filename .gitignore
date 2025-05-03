@@ -1,0 +1,32 @@
+# Ambiente virtual
+intranet_RJ_1/
+venv/
+env/
+.venv/
+.env
+
+# Arquivos de cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Arquivos de IDE e editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Arquivos de configuração
+credentials.json
+
+# Logs
+*.log
+
+# Arquivos temporários
+.tmp/
+temp/
+EOF < /dev/null

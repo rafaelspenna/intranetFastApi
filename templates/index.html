@@ -1,0 +1,87 @@
+<!-- templates/index.html -->
+{% extends "base.html" %}
+
+{% block title %}Início - Visualizador de Planilhas{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0">Bem-vindo ao sistema REMAPE</h2>
+            </div>
+            <div class="card-body">
+                {% if user %}
+                <div class="alert alert-success">
+                    <h4><i class="fas fa-user-check me-2"></i> Olá, {{ user.full_name }}!</h4>
+                    <p>Bem-vindo ao sistema de gestão REMAPE. Selecione uma das visualizações abaixo para acessar os dados.</p>
+                </div>
+                {% endif %}
+                
+                <h3 class="mt-4">Visualizações Disponíveis:</h3>
+                
+                <div class="row mt-3">
+                    {% for sheet in sheet_names %}
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-header
+                                {% if sheet == "VISITAS" %}
+                                    bg-info
+                                {% elif sheet == "PROSPECÇÃO" %}
+                                    bg-success
+                                {% elif sheet == "DESPESAS" %}
+                                    bg-warning
+                                {% elif sheet == "QUESTIONÁRIO" %}
+                                    bg-secondary
+                                {% elif sheet == "VENDAS" %}
+                                    bg-success text-white
+                                {% else %}
+                                    bg-light
+                                {% endif %}
+                                text-white">
+                                <h5 class="card-title mb-0">
+                                    {% if sheet == "VISITAS" %}
+                                        <i class="fas fa-clipboard-check fa-fw"></i>
+                                    {% elif sheet == "PROSPECÇÃO" %}
+                                        <i class="fas fa-search-dollar fa-fw"></i>
+                                    {% elif sheet == "DESPESAS" %}
+                                        <i class="fas fa-money-bill-wave fa-fw"></i>
+                                    {% elif sheet == "QUESTIONÁRIO" %}
+                                        <i class="fas fa-clipboard-list fa-fw"></i>
+                                    {% elif sheet == "VENDAS" %}
+                                        <i class="fas fa-shopping-cart fa-fw"></i>
+                                    {% else %}
+                                        <i class="fas fa-table fa-fw"></i>
+                                    {% endif %}
+                                    {{ sheet }}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    {% if sheet == "VISITAS" %}
+                                        Dados de visitas realizadas.
+                                    {% elif sheet == "PROSPECÇÃO" %}
+                                        Informações sobre prospecções de novos clientes.
+                                    {% elif sheet == "DESPESAS" %}
+                                        Controle de despesas.
+                                    {% elif sheet == "QUESTIONÁRIO" %}
+                                        Respostas de questionários.
+                                    {% elif sheet == "VENDAS" %}
+                                        Registro e acompanhamento de vendas.
+                                    {% else %}
+                                        Visualize os dados da aba {{ sheet }}.
+                                    {% endif %}
+                                </p>
+                                <a href="/sheet/{{ sheet }}" class="btn btn-primary">
+                                    <i class="fas fa-table"></i> Visualizar Dados
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
