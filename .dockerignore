@@ -1,0 +1,36 @@
+# Ambiente virtual
+intranet_RJ_1/
+venv/
+env/
+.venv/
+
+# Git
+.git
+.gitignore
+
+# Arquivos de cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcpy/
+
+# Arquivos de IDE e editores
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Arquivos temporários
+.tmp/
+temp/
+
+# Outros
+README.md
+Dockerfile
+.dockerignore
