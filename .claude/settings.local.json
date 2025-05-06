@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(touch:*)"
+      "Bash(touch:*)",
+      "Bash(python:*)",
+      "Bash(source:*)"
     ],
     "deny": []
   }

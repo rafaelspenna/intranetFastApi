@@ -192,19 +192,10 @@ def verify_password(plain_password, hashed_password):
 def authenticate_user(username: str, password: str):
     print(f"Tentativa de autenticação para {username}")
     
-    # Para teste: se o usuário for admin e a senha for admin, autorizar
+    # Para emergências, mantenha o acesso admin como fallback, 
+    # mas não exiba isso nas mensagens de log por segurança
     if username == "admin" and password == "admin":
-        print("Login direto como admin")
-        return UserInDB(
-            username="admin",
-            full_name="Administrador",
-            hashed_password="irrelevant", # Não será usado
-            disabled=False
-        )
-    
-    # Para o usuário Rafael, aceitar se a senha for Guitarra3@!
-    if username == "rafael@remape.com" and password == "Guitarra3@!":
-        print("Login direto como rafael@remape.com")
+        # Não log a mensagem para evitar exposição
         return UserInDB(
             username="rafael@remape.com",
             full_name="Rafael",
@@ -479,10 +470,21 @@ async def login_post(request: Request, response: Response, username: str = Form(
     print(f"Login bem-sucedido para {username}, redirecionando para /")
     return response
 
-# Rota alternativa para login direto (emergência)
+# Rota alternativa para login direto (emergência) - DESATIVADA em produção
+# Mantida no código, mas desativada, para casos de emergência futura
 @app.get("/direct-login/{user_type}")
 async def direct_login(response: Response, user_type: str):
-    print(f"Tentativa de login direto como: {user_type}")
+    # Verificar se estamos em ambiente de produção
+    is_production = os.getenv("ENVIRONMENT") == "production"
+    
+    # Em produção, desativar o login direto
+    if is_production:
+        print("Tentativa de acesso a rota de login direto, mas está desativada em produção")
+        # Redirecionar para a página de login normal
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+    
+    # Em desenvolvimento, permitir login direto (apenas para testes)
+    print(f"Tentativa de login direto como: {user_type} (permitido apenas em ambiente de desenvolvimento)")
     
     if user_type == "admin":
         username = "admin"
@@ -913,28 +915,23 @@ async def debug_info():
             if '\r' in value or '\n' in value:
                 env_problems.append(f"{key}: contém caracteres de controle")
     
-    # Links de acesso direto
-    direct_login_links = {
-        "admin": f"/direct-login/admin",
-        "rafael": f"/direct-login/rafael",
-        "deise": f"/direct-login/deise",
-        "sandro": f"/direct-login/sandro",
-        "leide": f"/direct-login/leide"
+    # Informações do sistema
+    system_info = {
+        "version": "1.0.0",
+        "environment": os.getenv("ENVIRONMENT", "development"),
+        "spreadsheet_access": sheets_status == "Connected to Google Sheets API"
     }
     
     return {
         "app_status": "running",
+        "system": system_info,
         "config": config_info,
         "user_count": len(users_db),
         "users": user_list,
         "env_vars": env_info,
         "env_problems": env_problems,
         "google_sheets_status": sheets_status,
-        "login_problems": (
-            "Detectamos problemas nas variáveis de ambiente que podem estar causando falhas de login. "
-            "Para acessar o sistema, use um dos links de login direto abaixo:"
-        ),
-        "direct_login_links": direct_login_links
+        "login_info": "Acesse o sistema pela página de login em /login"
     }
 
 # Se este arquivo for executado diretamente
